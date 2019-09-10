@@ -29,13 +29,15 @@ public class FttCompiladoresValidateLines {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
             String st;
-            Stack<Character> stack = new Stack<>();
+            Stack<Character> stack;
 
             String result = "";
 
             while ((st = br.readLine()) != null) {
+
                 boolean validate = true;
                 char c;
+                stack = new Stack<>();
 
                 for (int i = 0; i < st.length(); i++) {
                     c = st.charAt(i);
@@ -77,7 +79,7 @@ public class FttCompiladoresValidateLines {
                         }
                     }
                 }
-                if (validate) {
+                if (validate && stack.empty()) {
                     result += st + " - OK!\n";
                 } else {
                     result += st + " - Inválido!\n";

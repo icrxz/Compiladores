@@ -1,6 +1,12 @@
-{[]} - OK!
-([)] - Inválido!
-[{()()}[]] - OK!
-{}()[()]] - Inválido!
-)[{}]()( - Inválido!
-(()[)] - Inválido!
+{[]} - OK - OK!
+([)] - Inválido - Inválido!
+[{()()}[]] - OK - OK!
+{}()[()]] - Inválido - Inválido!
+)[{}]()( - Inválido - Inválido!
+(()[)] - Inválido - Inválido!
+{ - Inválido!
+} - Inválido!
+[ - Inválido!
+] - Inválido!
+( - Inválido!
+) - Inválido!
