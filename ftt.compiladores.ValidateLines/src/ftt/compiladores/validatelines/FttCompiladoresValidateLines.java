@@ -1,6 +1,11 @@
 package ftt.compiladores.validatelines;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -11,63 +16,77 @@ import java.util.Stack;
 public class FttCompiladoresValidateLines {
 
     public static void main(String[] args) throws IOException {
-        Scanner scan = new Scanner(System.in);
+        Scanner scan = new Scanner(System.in, "ISO-8859-2");
+        System.out.print("Digite o caminho do arquivo a ser lido: ");
         String pathTxt = scan.nextLine();
 
-        File file = new File(pathTxt);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String st;
-        Stack<Character> stack = new Stack<Character>();
+        System.out.print("Digite o caminho do arquivo a ser salvo com os resultados: ");
+        String outPathTxt = scan.nextLine();
 
-        while ((st = br.readLine()) != null) {
+        try {
+            File file = new File(pathTxt);
+            FileWriter out = new FileWriter(outPathTxt);
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 
-            boolean validate = true;
-            char c;
-            for (int i = 0; i < st.length(); i++) {
-                c = st.charAt(i);
-                if (c == '{') {
-                    stack.push(c);
-                } else if (c == '[' && (stack.empty() || stack.peek() != '(')) {
-                    stack.push(c);
-                } else if (c == '(') {
-                    stack.push(c);
-                } else if (c == ')') {
-                    if (stack.empty()) {
-                        validate = false;
-                        break;
-                    } else if (stack.peek() == '(') {
-                        stack.pop();
-                    } else {
-                        validate = false;
-                        break;
-                    }
-                } else if (c == ']') {
-                    if (stack.empty()) {
-                        validate = false;
-                        break;
-                    } else if (stack.peek() == '[') {
-                        stack.pop();
-                    } else {
-                        validate = false;
-                        break;
-                    }
-                } else if (c == '}') {
-                    if (stack.empty()) {
-                        validate = false;
-                        break;
-                    } else if (stack.peek() == '{') {
-                        stack.pop();
-                    } else {
-                        validate = false;
-                        break;
+            String st;
+            Stack<Character> stack = new Stack<>();
+
+            String result = "";
+
+            while ((st = br.readLine()) != null) {
+                boolean validate = true;
+                char c;
+
+                for (int i = 0; i < st.length(); i++) {
+                    c = st.charAt(i);
+                    if (c == '{') {
+                        stack.push(c);
+                    } else if (c == '[' && (stack.empty() || stack.peek() != '(')) {
+                        stack.push(c);
+                    } else if (c == '(') {
+                        stack.push(c);
+                    } else if (c == ')') {
+                        if (stack.empty()) {
+                            validate = false;
+                            break;
+                        } else if (stack.peek() == '(') {
+                            stack.pop();
+                        } else {
+                            validate = false;
+                            break;
+                        }
+                    } else if (c == ']') {
+                        if (stack.empty()) {
+                            validate = false;
+                            break;
+                        } else if (stack.peek() == '[') {
+                            stack.pop();
+                        } else {
+                            validate = false;
+                            break;
+                        }
+                    } else if (c == '}') {
+                        if (stack.empty()) {
+                            validate = false;
+                            break;
+                        } else if (stack.peek() == '{') {
+                            stack.pop();
+                        } else {
+                            validate = false;
+                            break;
+                        }
                     }
                 }
+                if (validate) {
+                    result += st + " - OK!\n";
+                } else {
+                    result += st + " - Inválido!\n";
+                }
             }
-            if (validate) {
-                System.out.println("OK!");
-            } else {
-                System.out.println("Inválido!");
-            }
+            out.write(result);
+            out.close();
+        } catch (Exception ex) {
+            System.out.println("\n" + ex.getMessage());
         }
     }
 }
